@@ -7,7 +7,6 @@ import { useApp } from '../context/AppContext'
 function Cadastro() {
   const { setUser, setCurrentScreen } = useApp()
   const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
   const [telefone, setTelefone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -15,7 +14,7 @@ function Cadastro() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    setUser({ id: 1, name: nome, email })
+    setUser({ id: 1, name: nome, phone: telefone })
     setCurrentScreen('feed')
   }
 
@@ -36,15 +35,8 @@ function Cadastro() {
             onChange={(e) => setNome(e.target.value)}
           />
           <Input
-            icon="mail"
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
             icon="phone"
-            placeholder="Telefone"
+            placeholder="Número de telefone"
             type="tel"
             value={telefone}
             onChange={(e) => setTelefone(e.target.value)}

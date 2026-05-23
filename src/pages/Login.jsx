@@ -6,11 +6,11 @@ import { useApp } from '../context/AppContext'
 
 function Login() {
   const { setUser, setCurrentScreen } = useApp()
-  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
 
   function handleLogin() {
-    setUser({ id: 1, name: 'Maria João', email: 'maria@email.com' })
+    setUser({ id: 1, name: 'Maria João', phone: '+258 84 123 4567' })
     setCurrentScreen('feed')
   }
 
@@ -27,11 +27,11 @@ function Login() {
 
         <div className="flex flex-col gap-4 mt-12 slide-up">
           <Input
-            icon="mail"
-            placeholder="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            icon="phone"
+            placeholder="Número de telefone"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
           <Input
             icon="lock"

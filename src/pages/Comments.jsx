@@ -3,14 +3,19 @@ import Avatar from '../components/Avatar'
 import AppBar from '../components/AppBar'
 import EmptyState from '../components/EmptyState'
 import Icon from '../components/Icon'
+import StatusBadge from '../components/StatusBadge'
 import { useApp } from '../context/AppContext'
 import { alerts, users } from '../data/mockData'
+import { getLocalPublicationById, updatePublication } from '../services/storage'
 
 function Comments() {
   const { currentScreen, setCurrentScreen, user } = useApp()
   const alertId = parseInt(currentScreen.replace('comments-', ''), 10)
-  const alert = alerts.find((a) => a.id === alertId)
-  const [comments, setComments] = useState(alert?.comments || [])
+
+  const alert = alerts.find((a) => a.id === alertId) || getLocalPublicationById(alertId)
+  const localComments = getLocalPublicationById(alertId)?.comments
+
+  const [comments, setComments] = useState(alert?.comments || localComments || [])
   const [newComment, setNewComment] = useState('')
   const [openMenuId, setOpenMenuId] = useState(null)
   const [toast, setToast] = useState('')
@@ -35,7 +40,11 @@ function Comments() {
       text: newComment.trim(),
       date: new Date().toISOString(),
     }
-    setComments((prev) => [...prev, comment])
+    const updated = [...comments, comment]
+    setComments(updated)
+    if (alert?.local) {
+      updatePublication(alertId, { comments: updated })
+    }
     setNewComment('')
   }
 
@@ -66,6 +75,16 @@ function Comments() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <AppBar title="Comentários" onBack={() => setCurrentScreen('feed')} />
+
+      <div className="sticky top-14 z-10 bg-white border-b border-surface-100 px-5 py-3">
+        <div className="flex items-center gap-3">
+          <Avatar name={alert.name} size="sm" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-surface-800 truncate">{alert.name}</p>
+            <StatusBadge status={alert.status} size="sm" />
+          </div>
+        </div>
+      </div>
 
       <div className="flex-1 overflow-y-auto pb-20">
         <div className="screen-padding py-4">

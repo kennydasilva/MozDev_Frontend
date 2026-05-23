@@ -5,7 +5,8 @@ import Icon from '../components/Icon'
 import Avatar from '../components/Avatar'
 import EmptyState from '../components/EmptyState'
 import { useApp } from '../context/AppContext'
-import { feedAlerts as allAlerts } from '../data/feedMockData'
+import { feedAlerts } from '../data/feedMockData'
+import { getLocalPublications } from '../services/storage'
 
 const tabs = [
   { key: 'todos', label: 'Todos' },
@@ -18,7 +19,11 @@ function Feed() {
   const [activeTab, setActiveTab] = useState('todos')
 
   const filteredAlerts = useMemo(() => {
-    let list = [...allAlerts]
+    const local = getLocalPublications()
+    const mockIds = new Set(feedAlerts.map((a) => a.id))
+    const merged = [...feedAlerts, ...local.filter((l) => !mockIds.has(l.id))]
+
+    let list = [...merged]
 
     switch (activeTab) {
       case 'desaparecidos':
@@ -38,7 +43,7 @@ function Feed() {
   }
 
   function handleComment(alert) {
-    setCurrentScreen(`detail-${alert.id}?focus=comments`)
+    setCurrentScreen(`comments-${alert.id}`)
   }
 
   function handleShare(alert) {

@@ -6,6 +6,7 @@ import AppBar from '../components/AppBar'
 import { useApp } from '../context/AppContext'
 import { alerts } from '../data/mockData'
 import { feedAlerts } from '../data/feedMockData'
+import { getLocalPublicationById } from '../services/storage'
 
 function InfoCard({ title, children }) {
   return (
@@ -59,9 +60,11 @@ function Detail() {
 
   const alert = useMemo(() => {
     const base = alerts.find((a) => a.id === alertId)
-    if (!base) return null
-    const feedItem = feedAlerts.find((f) => f.id === alertId)
-    return { ...base, photo: feedItem?.photo || base.photo || null }
+    if (base) {
+      const feedItem = feedAlerts.find((f) => f.id === alertId)
+      return { ...base, photo: feedItem?.photo || base.photo || null }
+    }
+    return getLocalPublicationById(alertId)
   }, [alertId])
 
   const hasComments = alert && alert.comments && alert.comments.length > 0

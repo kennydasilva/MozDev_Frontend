@@ -5,6 +5,7 @@ import Button from '../components/Button'
 import PhotoUpload from '../components/PhotoUpload'
 import { useApp } from '../context/AppContext'
 import { locations } from '../data/mockData'
+import { savePublication } from '../services/storage'
 
 const initialForm = {
   tipo: null,
@@ -74,6 +75,20 @@ function CreatePublication() {
   }
 
   function handlePublish() {
+    savePublication({
+      name: form.nome,
+      idade: form.idade ? Number(form.idade) : '',
+      age: form.idade ? Number(form.idade) : '',
+      sexo: form.sexo,
+      lastSeen: form.ultimoLocal,
+      dateMissing: form.dataDesaparecimento,
+      physicalDesc: form.caracteristicas,
+      clothing: form.roupa,
+      description: form.descricao,
+      contact: form.contacto,
+      photo: form.foto,
+      status: form.tipo === 'encontrado' ? 'encontrado' : 'desaparecido',
+    })
     setCurrentScreen('feed')
   }
 
