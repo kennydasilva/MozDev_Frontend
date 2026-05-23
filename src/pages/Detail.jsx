@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import Avatar from '../components/Avatar'
-import StatusBadge from '../components/StatusBadge'
 import Icon from '../components/Icon'
 import Button from '../components/Button'
 import AppBar from '../components/AppBar'
@@ -164,7 +163,6 @@ function Detail() {
                   {alert.idade || alert.age} anos &middot; {alert.sexo}
                 </p>
               </div>
-              <StatusBadge status={alert.status} />
             </div>
           </div>
         </div>

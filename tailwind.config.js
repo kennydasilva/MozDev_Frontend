@@ -38,8 +38,8 @@ export default {
           600: '#16a34a',
         },
         surface: {
-          50: '#f8f7fa',
-          100: '#f1f0f4',
+          50: '#fcfcfd',
+          100: '#f5f5f7',
           200: '#e8e6ed',
           300: '#d4d1db',
           400: '#a09caa',

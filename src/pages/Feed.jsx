@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import AlertCard from '../components/AlertCard'
 import BottomNav from '../components/BottomNav'
 import Icon from '../components/Icon'
+import Avatar from '../components/Avatar'
 import EmptyState from '../components/EmptyState'
 import { useApp } from '../context/AppContext'
 import { feedAlerts as allAlerts } from '../data/feedMockData'
@@ -13,7 +14,7 @@ const tabs = [
 ]
 
 function Feed() {
-  const { setCurrentScreen, setMenuOpen } = useApp()
+  const { setCurrentScreen, setMenuOpen, user } = useApp()
   const [activeTab, setActiveTab] = useState('todos')
 
   const filteredAlerts = useMemo(() => {
@@ -49,8 +50,8 @@ function Feed() {
     }
   }
 
-  function handleSearch() {
-    setCurrentScreen('search')
+  function handleAvatar() {
+    setCurrentScreen(user ? 'profile' : 'login')
   }
 
   return (
@@ -69,21 +70,13 @@ function Feed() {
               Alertas Recentes
             </h1>
           </div>
-          <div className="flex items-center gap-1">
-            <button
-              onClick={handleSearch}
-              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
-              aria-label="Pesquisar"
-            >
-              <Icon name="search" size={20} />
-            </button>
-            <button
-              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
-              aria-label="Filtrar"
-            >
-              <Icon name="filter" size={20} />
-            </button>
-          </div>
+          <button
+            onClick={handleAvatar}
+            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-100 active:bg-surface-200 transition-colors"
+            aria-label="Abrir perfil"
+          >
+            <Avatar name={user?.name || 'Utilizador'} src={user?.avatar} size="sm" />
+          </button>
         </div>
 
         <div className="px-5 pb-3">
