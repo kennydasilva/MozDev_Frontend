@@ -3,8 +3,9 @@ import Avatar from '../components/Avatar'
 import Icon from '../components/Icon'
 import Button from '../components/Button'
 import AppBar from '../components/AppBar'
+import StatusBadge from '../components/StatusBadge'
 import { useApp } from '../context/AppContext'
-import { alerts } from '../data/mockData'
+import { alerts, users, chats } from '../data/mockData'
 import { feedAlerts } from '../data/feedMockData'
 import { getLocalPublicationById } from '../services/storage'
 
@@ -52,6 +53,7 @@ function CommentItem({ comment }) {
 function Detail() {
   const { currentScreen, setCurrentScreen } = useApp()
   const [showAllComments, setShowAllComments] = useState(false)
+  const [imgError, setImgError] = useState(false)
 
   const alertId = useMemo(() => {
     const match = currentScreen.match(/^detail-(\d+)/)
@@ -91,6 +93,14 @@ function Detail() {
   }
 
   function handleChat() {
+    const author = users.find((u) => u.id === alert.authorId)
+    if (author) {
+      const existingChat = chats.find((c) => c.userId === author.id)
+      if (existingChat) {
+        setCurrentScreen(`chat-${existingChat.id}`)
+        return
+      }
+    }
     setCurrentScreen('chat-list')
   }
 
@@ -140,12 +150,13 @@ function Detail() {
         )}
 
         <div className="relative">
-          {alert.photo ? (
+          {alert.photo && !imgError ? (
             <div className="w-full h-64 relative">
               <img
                 src={alert.photo}
                 alt={alert.name}
                 className="w-full h-full object-cover"
+                onError={() => setImgError(true)}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             </div>
@@ -166,6 +177,7 @@ function Detail() {
                   {alert.idade || alert.age} anos &middot; {alert.sexo}
                 </p>
               </div>
+              <StatusBadge status={alert.status} />
             </div>
           </div>
         </div>

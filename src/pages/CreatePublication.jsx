@@ -414,9 +414,11 @@ function CreatePublication() {
                 </label>
                 <PhotoUpload
                   currentImage={form.foto}
-                  onUpload={(file) =>
-                    setField('foto', URL.createObjectURL(file))
-                  }
+                  onUpload={(file) => {
+                    const reader = new FileReader()
+                    reader.onload = (e) => setField('foto', e.target.result)
+                    reader.readAsDataURL(file)
+                  }}
                 />
               </div>
             </div>
