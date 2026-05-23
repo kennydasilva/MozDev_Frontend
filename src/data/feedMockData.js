@@ -1,6 +1,5 @@
 import kenny from "../assets/Kenny da Silva.jpeg";
 import ernesto from "../assets/Ernesto.jpeg";
-import lourenco from "../assets/lourenço.png";
 import carmon from "../assets/Shelton.png";
 
 export const feedAlerts = [
@@ -29,18 +28,6 @@ export const feedAlerts = [
     date: "2026-05-21T10:00:00",
   },
   {
-    id: 3,
-    name: "Lourenço Monjane",
-    age: 21,
-    sexo: "Masculino",
-    photo: lourenco,
-    lastSeen: "Bairro da Mafalala, Maputo",
-    dateMissing: "2026-05-18",
-    status: "desaparecido",
-    urgency: "urgente",
-    date: "2026-05-20T09:00:00",
-  },
-  {
     id: 4,
     name: "Carmon Ntefula",
     age: 23,
@@ -53,3 +40,4 @@ export const feedAlerts = [
     date: "2026-05-19T16:00:00",
   },
 ];
+

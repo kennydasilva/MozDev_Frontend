@@ -56,3 +56,7 @@ export function getMergedById(id, mockAlerts) {
   if (mock) return mock
   return getLocalPublicationById(id)
 }
+
+export function clearAllPublications() {
+  localStorage.removeItem(STORAGE_KEY)
+}
