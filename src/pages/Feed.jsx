@@ -13,7 +13,7 @@ const tabs = [
 ]
 
 function Feed() {
-  const { setCurrentScreen } = useApp()
+  const { setCurrentScreen, setMenuOpen } = useApp()
   const [activeTab, setActiveTab] = useState('todos')
 
   const filteredAlerts = useMemo(() => {
@@ -56,37 +56,46 @@ function Feed() {
   return (
     <div className="min-h-screen bg-surface-50 pb-24">
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-surface-100">
-        <div className="px-5 pt-7 pb-4 flex items-end justify-between gap-4">
-          <h1 className="text-[28px] leading-tight font-extrabold text-surface-900">
-            Alertas Recentes
-          </h1>
-          <div className="flex items-center gap-2 pb-0.5 shrink-0">
+        <div className="flex items-center justify-between px-5 pt-4 pb-3">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors -ml-1.5"
+              aria-label="Abrir menu"
+            >
+              <Icon name="menu" size={20} />
+            </button>
+            <h1 className="text-lg font-bold text-surface-900">
+              Alertas Recentes
+            </h1>
+          </div>
+          <div className="flex items-center gap-1">
             <button
               onClick={handleSearch}
-              className="flex items-center justify-center w-10 h-10 rounded-2xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
+              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
               aria-label="Pesquisar"
             >
-              <Icon name="search" size={22} />
+              <Icon name="search" size={20} />
             </button>
             <button
-              className="flex items-center justify-center w-10 h-10 rounded-2xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
+              className="flex items-center justify-center w-9 h-9 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
               aria-label="Filtrar"
             >
-              <Icon name="filter" size={22} />
+              <Icon name="filter" size={20} />
             </button>
           </div>
         </div>
 
-        <div className="px-5 pb-4">
-          <div className="grid grid-cols-3 gap-3">
+        <div className="px-5 pb-3">
+          <div className="grid grid-cols-3 gap-2">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`py-3 rounded-full text-sm font-semibold transition-all ${
+                className={`py-2.5 rounded-xl text-xs font-semibold transition-all ${
                   activeTab === tab.key
                     ? 'bg-primary-500 text-white shadow-soft-md'
-                    : 'bg-white text-surface-600 shadow-soft border border-surface-100 hover:bg-surface-50'
+                    : 'bg-white text-surface-500 shadow-soft border border-surface-100 hover:bg-surface-50'
                 }`}
                 aria-pressed={activeTab === tab.key}
               >
@@ -97,7 +106,7 @@ function Feed() {
         </div>
       </header>
 
-      <div className="screen-padding pt-4 pb-28 space-y-4">
+      <div className="screen-padding pt-3 pb-28 space-y-3">
         {filteredAlerts.length === 0 ? (
           <EmptyState
             icon="alert"
@@ -119,10 +128,10 @@ function Feed() {
 
       <button
         onClick={() => setCurrentScreen('create')}
-        className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-primary-500 text-white flex items-center justify-center shadow-soft-lg hover:bg-primary-600 active:scale-95 transition-all duration-200 z-40"
+        className="fixed bottom-24 right-5 w-12 h-12 rounded-full bg-primary-500 text-white flex items-center justify-center shadow-soft-lg hover:bg-primary-600 active:scale-95 transition-all duration-200 z-40"
         aria-label="Publicar alerta"
       >
-        <Icon name="plus" size={28} />
+        <Icon name="plus" size={22} />
       </button>
 
       <BottomNav

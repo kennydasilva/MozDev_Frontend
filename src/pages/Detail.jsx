@@ -6,16 +6,7 @@ import Button from '../components/Button'
 import AppBar from '../components/AppBar'
 import { useApp } from '../context/AppContext'
 import { alerts } from '../data/mockData'
-
-function getInitials(name) {
-  if (!name) return '?'
-  return name
-    .split(' ')
-    .map((p) => p[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase()
-}
+import { feedAlerts } from '../data/feedMockData'
 
 function InfoCard({ title, children }) {
   return (
@@ -68,7 +59,10 @@ function Detail() {
   }, [currentScreen])
 
   const alert = useMemo(() => {
-    return alerts.find((a) => a.id === alertId) || null
+    const base = alerts.find((a) => a.id === alertId)
+    if (!base) return null
+    const feedItem = feedAlerts.find((f) => f.id === alertId)
+    return { ...base, photo: feedItem?.photo || base.photo || null }
   }, [alertId])
 
   const hasComments = alert && alert.comments && alert.comments.length > 0
@@ -144,22 +138,25 @@ function Detail() {
         )}
 
         <div className="relative">
-          <div
-            className={`w-full h-56 flex items-center justify-center ${
-              isFound
-                ? 'bg-gradient-to-br from-success-400 to-success-600'
-                : 'bg-gradient-to-br from-primary-400 to-primary-600'
-            }`}
-          >
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-28 h-28 rounded-full bg-white/20 flex items-center justify-center">
-                <span className="text-4xl font-bold text-white">
-                  {getInitials(alert.name)}
-                </span>
-              </div>
+          {alert.photo ? (
+            <div className="w-full h-64 relative">
+              <img
+                src={alert.photo}
+                alt={alert.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
             </div>
-          </div>
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-5 pb-4 pt-12">
+          ) : (
+            <div
+              className={`w-full h-56 flex items-center justify-center ${
+                isFound
+                  ? 'bg-gradient-to-br from-success-400 to-success-600'
+                  : 'bg-gradient-to-br from-primary-400 to-primary-600'
+              }`}
+            />
+          )}
+          <div className="absolute bottom-0 left-0 right-0 px-5 pb-4 pt-16">
             <div className="flex items-end justify-between">
               <div>
                 <h1 className="text-xl font-bold text-white">{alert.name}</h1>

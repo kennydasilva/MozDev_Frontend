@@ -46,13 +46,13 @@ export default function AlertCard({ alert, onClick, onComment, onShare }) {
       onKeyDown={handleKeyDown}
       role={onClick ? "button" : "article"}
       tabIndex={onClick ? 0 : undefined}
-      className={`card w-full text-left p-4 shadow-soft-md rounded-3xl ${
+      className={`card w-full text-left p-3 shadow-soft-md rounded-2xl ${
         onClick ? "cursor-pointer active:scale-[0.99] transition-transform" : ""
       }`}
       aria-label={`Ver detalhes do alerta de ${alert.name}`}
     >
-      <div className="flex gap-4 items-stretch">
-        <div className="relative shrink-0 w-[132px] self-stretch rounded-2xl overflow-hidden bg-surface-100">
+      <div className="flex gap-3 items-stretch">
+        <div className="relative shrink-0 w-[100px] self-stretch rounded-xl overflow-hidden bg-surface-100">
           {photoSrc ? (
             <img
               src={photoSrc}
@@ -61,28 +61,37 @@ export default function AlertCard({ alert, onClick, onComment, onShare }) {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full min-h-[132px] bg-gradient-to-br from-surface-100 to-surface-200 flex items-center justify-center">
-              <span className="text-surface-600 font-extrabold text-2xl">
+            <div className="w-full h-full min-h-[100px] bg-gradient-to-br from-surface-100 to-surface-200 flex items-center justify-center">
+              <span className="text-surface-500 font-bold text-base">
                 {getInitials(alert.name)}
               </span>
             </div>
           )}
         </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0" />
-            <div className="flex items-center gap-1 shrink-0">
+        <div className="flex-1 min-w-0 flex flex-col">
+          <div className="flex items-start justify-between gap-1">
+            <div className="min-w-0 flex-1">
+              <h3 className="text-[15px] leading-tight font-bold text-surface-900 truncate">
+                {alert.name}
+              </h3>
+              <div className="flex items-center gap-1.5 mt-0.5 text-xs text-surface-400">
+                <span>{age} anos</span>
+                <span className="w-1 h-1 rounded-full bg-surface-300" />
+                <span className="truncate">{alert.sexo}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-0.5 shrink-0 ml-1">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   onComment?.(alert);
                 }}
-                className="flex items-center justify-center w-9 h-9 rounded-2xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
+                className="flex items-center justify-center w-8 h-8 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
                 aria-label="Comentar"
               >
-                <Icon name="comment" size={20} />
+                <Icon name="comment" size={16} />
               </button>
               <button
                 type="button"
@@ -90,51 +99,29 @@ export default function AlertCard({ alert, onClick, onComment, onShare }) {
                   e.stopPropagation();
                   onShare?.(alert);
                 }}
-                className="flex items-center justify-center w-9 h-9 rounded-2xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
+                className="flex items-center justify-center w-8 h-8 rounded-xl hover:bg-surface-100 active:bg-surface-200 transition-colors"
                 aria-label="Partilhar"
               >
-                <Icon name="share" size={20} />
+                <Icon name="share" size={16} />
               </button>
             </div>
           </div>
 
-          <h3 className="mt-3 text-[26px] leading-tight font-extrabold text-surface-900 truncate">
-            {alert.name}
-          </h3>
-
-          <div className="mt-2 flex items-center gap-2 text-sm text-surface-500">
-            <div className="flex items-center gap-1.5">
-              <Icon name="user" size={16} className="text-surface-400" />
-              <span>{age} anos</span>
-            </div>
-            <span className="w-1 h-1 rounded-full bg-surface-300" />
-            <div className="flex items-center gap-1.5 min-w-0">
-              <Icon
-                name={sexToIcon(alert.sexo)}
-                size={16}
-                className="text-surface-400"
-              />
-              <span className="truncate">{alert.sexo}</span>
+          <div className="mt-auto pt-2 flex items-center gap-2 text-xs text-surface-500">
+            <div className="flex items-center gap-1 min-w-0">
+              <Icon name="location" size={13} className="shrink-0 text-primary-400" />
+              <span className="truncate">{alert.lastSeen}</span>
             </div>
           </div>
 
-          <div className="mt-3 flex items-start gap-2 text-sm text-surface-600">
-            <Icon
-              name="location"
-              size={16}
-              className="mt-0.5 shrink-0 text-primary-500"
-            />
-            <span className="truncate">{alert.lastSeen}</span>
+          <div className="flex items-center gap-2 text-[11px] text-surface-400 mt-1">
+            <Icon name="calendar" size={12} className="shrink-0" />
+            <span>{formatDateDMY(alert.dateMissing)}</span>
           </div>
 
-          <div className="mt-3 flex items-center gap-2 text-sm text-surface-500">
-            <Icon name="calendar" size={16} className="text-surface-400" />
-            <span>Desaparecido a {formatDateDMY(alert.dateMissing)}</span>
-          </div>
-
-          <div className="mt-4 pt-4 border-t border-surface-100 flex items-center justify-center gap-2 text-primary-600 font-semibold">
-            <span>Ver detalhes</span>
-            <Icon name="arrowRight" size={18} className="text-primary-600" />
+          <div className="mt-2 pt-2 border-t border-surface-100 flex items-center justify-between">
+            <span className="text-xs font-semibold text-primary-600">Ver detalhes</span>
+            <Icon name="arrowRight" size={14} className="text-primary-500" />
           </div>
         </div>
       </div>
