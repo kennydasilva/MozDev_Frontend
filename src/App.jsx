@@ -46,9 +46,9 @@ function Router() {
     if (screen?.startsWith("comments-")) return <Comments />;
     if (screen?.startsWith("send-tip-")) return <SendTip />;
     if (screen?.startsWith("found-")) return <FoundCase />;
-    if (screen?.startsWith("chat-")) return <ChatConversation />;
 
     if (screen === "chat-list") return <ChatList />;
+    if (screen?.startsWith("chat-")) return <ChatConversation />;
     if (screen === "notifications") return <Notifications />;
     if (screen === "profile") return <Profile />;
     if (screen === "edit-profile") return <EditProfile />;

@@ -33,13 +33,18 @@ function InfoRow({ label, value, icon }) {
   )
 }
 
+function getCommentUser(userId) {
+  const u = users.find((u) => u.id === userId)
+  return u?.name || 'Utilizador'
+}
+
 function CommentItem({ comment }) {
   return (
     <div className="flex items-start gap-3 py-3 border-b border-surface-100 last:border-0">
-      <Avatar name={`User ${comment.userId}`} size="sm" />
+      <Avatar name={getCommentUser(comment.userId)} size="sm" />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-xs font-bold text-surface-700">Utilizador #{comment.userId}</span>
+          <span className="text-xs font-bold text-surface-700">{getCommentUser(comment.userId)}</span>
           <span className="text-[10px] text-surface-400">
             {new Date(comment.date).toLocaleDateString('pt-MZ', { day: 'numeric', month: 'short' })}
           </span>
@@ -51,7 +56,7 @@ function CommentItem({ comment }) {
 }
 
 function Detail() {
-  const { currentScreen, setCurrentScreen } = useApp()
+  const { currentScreen, setCurrentScreen, goBack } = useApp()
   const [showAllComments, setShowAllComments] = useState(false)
   const [imgError, setImgError] = useState(false)
 
@@ -93,15 +98,15 @@ function Detail() {
   }
 
   function handleChat() {
-    const author = users.find((u) => u.id === alert.authorId)
-    if (author) {
-      const existingChat = chats.find((c) => c.userId === author.id)
-      if (existingChat) {
-        setCurrentScreen(`chat-${existingChat.id}`)
-        return
-      }
+    const authorId = alert.authorId || 1
+    const author = users.find((u) => u.id === authorId)
+    if (!author) return
+    const existingChat = chats.find((c) => c.userId === author.id)
+    if (existingChat) {
+      setCurrentScreen(`chat-${existingChat.id}`)
+    } else {
+      setCurrentScreen(`chat-user-${author.id}`)
     }
-    setCurrentScreen('chat-list')
   }
 
   function handleReport() {
@@ -109,7 +114,7 @@ function Detail() {
   }
 
   function handleBack() {
-    setCurrentScreen('feed')
+    goBack()
   }
 
   if (!alert) {

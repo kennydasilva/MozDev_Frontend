@@ -179,6 +179,19 @@ export const chats = [
       { id: 8, fromId: 3, text: "Vamos continuar a divulgar", date: "2026-05-20T15:00:00" },
     ],
   },
+  {
+    id: 3,
+    userId: 1,
+    lastMessage: "Obrigado a todos que estão a ajudar",
+    lastDate: "2026-05-21T12:30:00",
+    unread: 1,
+    messages: [
+      { id: 9, fromId: 3, text: "Olá Maria, vi o seu alerta sobre o Kenny", date: "2026-05-21T10:00:00" },
+      { id: 10, fromId: 1, text: "Sim, estou muito preocupada. Obrigada pela atenção", date: "2026-05-21T10:15:00" },
+      { id: 11, fromId: 3, text: "Vou divulgar nos grupos do bairro central", date: "2026-05-21T11:00:00" },
+      { id: 12, fromId: 1, text: "Muito obrigada! Qualquer informação é bem-vinda", date: "2026-05-21T12:30:00" },
+    ],
+  },
 ];
 
 export const locations = [

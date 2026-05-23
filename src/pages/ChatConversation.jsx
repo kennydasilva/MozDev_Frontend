@@ -2,20 +2,25 @@ import { useState, useEffect, useRef } from 'react'
 import AppBar from '../components/AppBar'
 import Avatar from '../components/Avatar'
 import Icon from '../components/Icon'
-import EmptyState from '../components/EmptyState'
 import { useApp } from '../context/AppContext'
 import { chats, users } from '../data/mockData'
 
 function ChatConversation() {
-  const { currentScreen, setCurrentScreen, user } = useApp()
-  const chatId = Number(currentScreen.replace('chat-', '')) || 0
-  const chat = chats.find((c) => c.id === chatId)
-  const otherUser = chat ? users.find((u) => u.id === chat.userId) : null
-  const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState(chat?.messages || [])
-  const [imgError, setImgError] = useState({})
+  const { currentScreen, setCurrentScreen, goBack, user } = useApp()
   const endRef = useRef(null)
   const inputRef = useRef(null)
+
+  const isDirectChat = currentScreen.startsWith('chat-user-')
+  const userId = isDirectChat ? Number(currentScreen.replace('chat-user-', '')) : 0
+  const chatId = !isDirectChat ? Number(currentScreen.replace('chat-', '')) || 0 : 0
+
+  const existingChat = !isDirectChat ? chats.find((c) => c.id === chatId) : null
+  const otherUser = existingChat
+    ? users.find((u) => u.id === existingChat.userId)
+    : users.find((u) => u.id === userId)
+
+  const [message, setMessage] = useState('')
+  const [messages, setMessages] = useState(existingChat?.messages || [])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -73,13 +78,18 @@ function ChatConversation() {
     return groups
   }
 
-  function handleBack() { setCurrentScreen('chat-list') }
+  function handleBack() { goBack() }
 
-  if (!chat || !otherUser) {
+  if (!otherUser) {
     return (
       <div className="min-h-screen bg-white flex flex-col">
         <AppBar title="Conversa" onBack={handleBack} />
-        <EmptyState icon="messageCircle" title="Conversa não encontrada" description="Esta conversa pode ter sido removida." />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <Icon name="messageCircle" size={48} className="text-surface-300 mx-auto mb-4" />
+            <p className="text-surface-500 font-medium">Conversa não encontrada</p>
+          </div>
+        </div>
       </div>
     )
   }
@@ -103,6 +113,18 @@ function ChatConversation() {
               <span className="text-[11px] text-success-600 font-medium bg-success-50 px-3 py-0.5 rounded-full">Online</span>
             </div>
           </div>
+
+          {isDirectChat && messages.length === 0 && (
+            <div className="text-center mb-6">
+              <div className="bg-white rounded-2xl shadow-soft p-5 border border-surface-100">
+                <Icon name="messageCircle" size={28} className="text-primary-400 mx-auto mb-2" />
+                <p className="text-sm text-surface-600 leading-relaxed">
+                  Esta é uma conversa com <strong>{otherUser.name}</strong> sobre esta publicação.
+                  Envie a sua primeira mensagem.
+                </p>
+              </div>
+            </div>
+          )}
 
           {grouped.map((group) => (
             <div key={group.date}>
