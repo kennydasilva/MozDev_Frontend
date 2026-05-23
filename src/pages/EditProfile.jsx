@@ -5,9 +5,11 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import AppBar from '../components/AppBar'
 import { useApp } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 
 function EditProfile() {
   const { user, setUser, setCurrentScreen } = useApp()
+  const { showToast } = useToast()
 
   const [nome, setNome] = useState(user?.name || '')
   const [telefone, setTelefone] = useState(user?.phone || '')
@@ -16,6 +18,7 @@ function EditProfile() {
 
   function handleSave() {
     setUser({ ...user, name: nome, phone: telefone, location: localizacao })
+    showToast('Perfil actualizado com sucesso', 'success')
     setSaved(true)
     setTimeout(() => setCurrentScreen('profile'), 800)
   }

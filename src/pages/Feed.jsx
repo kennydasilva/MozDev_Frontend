@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import AlertCard from '../components/AlertCard'
 import BottomNav from '../components/BottomNav'
 import Icon from '../components/Icon'
 import Avatar from '../components/Avatar'
+import { SkeletonCard } from '../components/Skeleton'
 import EmptyState from '../components/EmptyState'
 import { useApp } from '../context/AppContext'
 import { feedAlerts } from '../data/feedMockData'
@@ -17,6 +18,10 @@ const tabs = [
 function Feed() {
   const { setCurrentScreen, setMenuOpen, user } = useApp()
   const [activeTab, setActiveTab] = useState('todos')
+  const [refreshing, setRefreshing] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const touchStart = useRef(null)
+  const [key, setKey] = useState(0)
 
   const filteredAlerts = useMemo(() => {
     const local = getLocalPublications()
@@ -36,7 +41,7 @@ function Feed() {
 
     list.sort((a, b) => new Date(b.date) - new Date(a.date))
     return list
-  }, [activeTab])
+  }, [activeTab, key])
 
   function handleAlertClick(alert) {
     setCurrentScreen(`detail-${alert.id}`)
@@ -59,8 +64,38 @@ function Feed() {
     setCurrentScreen(user ? 'profile' : 'login')
   }
 
+  const handleRefresh = useCallback(() => {
+    if (refreshing) return
+    setRefreshing(true)
+    setTimeout(() => {
+      setKey((k) => k + 1)
+      setRefreshing(false)
+    }, 800)
+  }, [refreshing])
+
+  const handleTouchStart = useCallback((e) => {
+    touchStart.current = e.touches[0].clientY
+  }, [])
+
+  const handleTouchMove = useCallback((e) => {
+    if (touchStart.current === null) return
+    const dist = e.touches[0].clientY - touchStart.current
+    if (dist > 100 && !refreshing) {
+      handleRefresh()
+    }
+  }, [handleRefresh, refreshing])
+
+  const handleTouchEnd = useCallback(() => {
+    touchStart.current = null
+  }, [])
+
   return (
-    <div className="min-h-screen bg-surface-50 flex flex-col pb-24">
+    <div
+      className="min-h-screen bg-surface-50 pb-24"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-surface-100">
         <div className="flex items-center justify-between px-5 pt-4 pb-3">
           <div className="flex items-center gap-3">
@@ -84,6 +119,17 @@ function Feed() {
           </button>
         </div>
 
+        {refreshing && (
+          <div className="flex items-center justify-center py-2">
+            <div className="flex items-center gap-2 text-primary-500">
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <circle cx="12" cy="12" r="10" strokeDasharray="31.4 31.4" strokeLinecap="round" />
+              </svg>
+              <span className="text-xs font-medium">Actualizando...</span>
+            </div>
+          </div>
+        )}
+
         <div className="px-5 pb-3">
           <div className="grid grid-cols-3 gap-2">
             {tabs.map((tab) => (
@@ -105,7 +151,7 @@ function Feed() {
       </header>
 
       {filteredAlerts.length === 0 ? (
-        <div className="flex-1 flex items-center justify-center px-5">
+        <div className="min-h-[60vh] flex items-center justify-center px-5">
           <div className="text-center">
             <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mx-auto mb-4">
               <Icon name="alert" size={24} className="text-surface-400" />
@@ -115,15 +161,19 @@ function Feed() {
         </div>
       ) : (
         <div className="screen-padding pt-3 pb-28 space-y-3">
-          {filteredAlerts.map((alert) => (
-            <AlertCard
-              key={alert.id}
-              alert={alert}
-              onClick={() => handleAlertClick(alert)}
-              onComment={handleComment}
-              onShare={handleShare}
-            />
-          ))}
+          {loading ? (
+            Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
+          ) : (
+            filteredAlerts.map((alert) => (
+              <AlertCard
+                key={alert.id}
+                alert={alert}
+                onClick={() => handleAlertClick(alert)}
+                onComment={handleComment}
+                onShare={handleShare}
+              />
+            ))
+          )}
         </div>
       )}
 
@@ -136,10 +186,10 @@ function Feed() {
       </button>
 
       <BottomNav
-        variant="mock"
-        active="alertas"
+        variant="classic"
+        active="inicio"
         onNavigate={(key) => {
-          const map = { inicio: 'feed', pesquisar: 'search', alertas: 'feed', perfil: 'profile' }
+          const map = { inicio: 'feed', pesquisar: 'search', publicar: 'create', notificacoes: 'notifications', perfil: 'profile' }
           setCurrentScreen(map[key] || key)
         }}
       />

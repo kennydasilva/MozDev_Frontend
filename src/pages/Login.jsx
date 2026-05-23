@@ -3,15 +3,18 @@ import Icon from '../components/Icon'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { useApp } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 import avatarImg from '../assets/shelton.jpeg'
 
 function Login() {
   const { setUser, setCurrentScreen } = useApp()
+  const { showToast } = useToast()
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
 
   function handleLogin() {
     setUser({ id: 1, name: 'Maria João', phone: '+258 84 123 4567', avatar: avatarImg })
+    showToast('Bem-vindo(a) à Rede Alerta!', 'success')
     setCurrentScreen('feed')
   }
 

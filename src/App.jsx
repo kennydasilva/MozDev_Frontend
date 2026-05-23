@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
+import { ToastProvider } from "./context/ToastContext";
 import HamburgerMenu from "./components/HamburgerMenu";
 
 import SplashScreen from "./pages/SplashScreen";
@@ -71,7 +72,9 @@ function Router() {
 function App() {
   return (
     <AppProvider>
-      <Router />
+      <ToastProvider>
+        <Router />
+      </ToastProvider>
     </AppProvider>
   );
 }

@@ -6,10 +6,12 @@ import Icon from '../components/Icon'
 import StatusBadge from '../components/StatusBadge'
 import PhotoUpload from '../components/PhotoUpload'
 import { useApp } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 import { alerts } from '../data/mockData'
 
 function SendTip() {
   const { currentScreen, setCurrentScreen } = useApp()
+  const { showToast } = useToast()
   const alertId = parseInt(currentScreen.replace('send-tip-', ''), 10)
   const alert = alerts.find((a) => a.id === alertId)
 
@@ -21,6 +23,7 @@ function SendTip() {
 
   function handleSubmit(e) {
     e.preventDefault()
+    showToast('Pista enviada com sucesso! Obrigado por ajudar.', 'success')
     setSent(true)
     setTimeout(() => setCurrentScreen('feed'), 1500)
   }

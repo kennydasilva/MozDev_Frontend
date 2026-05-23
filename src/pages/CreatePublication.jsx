@@ -4,6 +4,7 @@ import Input from '../components/Input'
 import Button from '../components/Button'
 import PhotoUpload from '../components/PhotoUpload'
 import { useApp } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 import { locations } from '../data/mockData'
 import { savePublication } from '../services/storage'
 
@@ -25,6 +26,7 @@ const initialForm = {
 
 function CreatePublication() {
   const { setCurrentScreen } = useApp()
+  const { showToast } = useToast()
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({ ...initialForm })
   const [errors, setErrors] = useState({})
@@ -61,7 +63,12 @@ function CreatePublication() {
     const errs = {}
     if (!form.nome.trim()) errs.nome = 'Nome é obrigatório'
     if (!form.contacto.trim()) errs.contacto = 'Contacto é obrigatório'
+    if (form.contacto.trim() && form.contacto.trim().length < 9) errs.contacto = 'Contacto inválido'
+    if (!form.ultimoLocal.trim()) errs.ultimoLocal = 'Último local é obrigatório'
     setErrors(errs)
+    if (Object.keys(errs).length > 0) {
+      showToast('Preencha todos os campos obrigatórios', 'error')
+    }
     return Object.keys(errs).length === 0
   }
 
@@ -75,6 +82,10 @@ function CreatePublication() {
   }
 
   function handlePublish() {
+    if (!form.nome.trim() || !form.contacto.trim()) {
+      showToast('Preencha todos os campos obrigatórios', 'error')
+      return
+    }
     savePublication({
       name: form.nome,
       idade: form.idade ? Number(form.idade) : '',
@@ -89,6 +100,7 @@ function CreatePublication() {
       photo: form.foto,
       status: form.tipo === 'encontrado' ? 'encontrado' : 'desaparecido',
     })
+    showToast('Publicação criada com sucesso!', 'success')
     setCurrentScreen('feed')
   }
 
@@ -316,11 +328,12 @@ function CreatePublication() {
               </div>
 
               <Input
-                label="Último local visto"
+                label="Último local visto *"
                 placeholder="Ex: Bairro da Polana, Maputo"
                 value={form.ultimoLocal}
                 onChange={(e) => setField('ultimoLocal', e.target.value)}
                 icon="location"
+                error={errors.ultimoLocal}
               />
 
               <div className="grid grid-cols-2 gap-3">

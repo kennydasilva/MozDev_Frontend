@@ -81,7 +81,7 @@ function Detail() {
   const hiddenCount = alert ? (alert.comments?.length || 0) - 2 : 0
 
   function handleTip() {
-    setCurrentScreen('send-tip')
+    setCurrentScreen(`send-tip-${alert.id}`)
   }
 
   function handleComment() {

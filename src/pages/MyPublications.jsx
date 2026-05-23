@@ -5,7 +5,9 @@ import StatusBadge from '../components/StatusBadge'
 import AppBar from '../components/AppBar'
 import EmptyState from '../components/EmptyState'
 import { useApp } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 import { alerts } from '../data/mockData'
+import { deletePublication } from '../services/storage'
 
 const filters = [
   { key: 'todas', label: 'Todas' },
@@ -21,6 +23,7 @@ function formatDate(dateStr) {
 
 function MyPublications() {
   const { user, setCurrentScreen } = useApp()
+  const { showToast } = useToast()
   const [activeFilter, setActiveFilter] = useState('todas')
   const [deleteTarget, setDeleteTarget] = useState(null)
 
@@ -37,6 +40,10 @@ function MyPublications() {
   }
 
   function confirmDelete() {
+    if (deleteTarget?.local) {
+      deletePublication(deleteTarget.id)
+    }
+    showToast('Publicação apagada com sucesso', 'success')
     setDeleteTarget(null)
   }
 

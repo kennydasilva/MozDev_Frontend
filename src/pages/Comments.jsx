@@ -5,11 +5,13 @@ import EmptyState from '../components/EmptyState'
 import Icon from '../components/Icon'
 import StatusBadge from '../components/StatusBadge'
 import { useApp } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 import { alerts, users } from '../data/mockData'
 import { getLocalPublicationById, updatePublication } from '../services/storage'
 
 function Comments() {
   const { currentScreen, setCurrentScreen, user } = useApp()
+  const { showToast } = useToast()
   const alertId = parseInt(currentScreen.replace('comments-', ''), 10)
 
   const alert = alerts.find((a) => a.id === alertId) || getLocalPublicationById(alertId)
@@ -45,6 +47,7 @@ function Comments() {
     if (alert?.local) {
       updatePublication(alertId, { comments: updated })
     }
+    showToast('Comentário enviado', 'success')
     setNewComment('')
   }
 
