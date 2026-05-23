@@ -57,7 +57,7 @@ function Profile() {
       <div className="flex-1 max-w-mobile mx-auto w-full">
         <div className="screen-padding pt-6 pb-24">
           <div className="flex flex-col items-center gap-3 mb-8 slide-up">
-            <Avatar name={profile.name} size="xl" />
+            <Avatar name={profile.name} src={user?.avatar} size="xl" />
             <h1 className="text-xl font-bold text-surface-800">{profile.name}</h1>
             <div className="flex flex-col items-center gap-0.5">
               <div className="flex items-center gap-1.5 text-sm text-surface-400">

@@ -60,7 +60,7 @@ function Feed() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-50 pb-24">
+    <div className="min-h-screen bg-surface-50 flex flex-col pb-24">
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-surface-100">
         <div className="flex items-center justify-between px-5 pt-4 pb-3">
           <div className="flex items-center gap-3">
@@ -104,15 +104,18 @@ function Feed() {
         </div>
       </header>
 
-      <div className="screen-padding pt-3 pb-28 space-y-3">
-        {filteredAlerts.length === 0 ? (
-          <EmptyState
-            icon="alert"
-            title="Nenhum alerta encontrado"
-            description="Nenhum alerta corresponde ao filtro seleccionado."
-          />
-        ) : (
-          filteredAlerts.map((alert) => (
+      {filteredAlerts.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center px-5">
+          <div className="text-center">
+            <div className="w-12 h-12 rounded-2xl bg-surface-100 flex items-center justify-center mx-auto mb-4">
+              <Icon name="alert" size={24} className="text-surface-400" />
+            </div>
+            <p className="text-sm font-semibold text-surface-500">Nenhum alerta encontrado</p>
+          </div>
+        </div>
+      ) : (
+        <div className="screen-padding pt-3 pb-28 space-y-3">
+          {filteredAlerts.map((alert) => (
             <AlertCard
               key={alert.id}
               alert={alert}
@@ -120,9 +123,9 @@ function Feed() {
               onComment={handleComment}
               onShare={handleShare}
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
       <button
         onClick={() => setCurrentScreen('create')}

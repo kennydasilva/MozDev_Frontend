@@ -3,6 +3,7 @@ import Icon from '../components/Icon'
 import Input from '../components/Input'
 import Button from '../components/Button'
 import { useApp } from '../context/AppContext'
+import avatarImg from '../assets/shelton.jpeg'
 
 function Login() {
   const { setUser, setCurrentScreen } = useApp()
@@ -10,7 +11,7 @@ function Login() {
   const [password, setPassword] = useState('')
 
   function handleLogin() {
-    setUser({ id: 1, name: 'Maria João', phone: '+258 84 123 4567' })
+    setUser({ id: 1, name: 'Maria João', phone: '+258 84 123 4567', avatar: avatarImg })
     setCurrentScreen('feed')
   }
 
